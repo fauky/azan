@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Azan Dashboard</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Configuration (Must be loaded before dashboard logic) -->
+  <script src="config.js"></script>
+</head>
+<body>
+
+  <!--
+    ==========================================================================
+    HEADER SECTION
+    Contains: Weather icon, Clock, Dates, and Weather details.
+    ==========================================================================
+  -->
+  <header class="header" id="header">
+    <div class="header-row">
+      <!-- Weather Icon & Description -->
+      <div class="weather-icon-wrap" id="weather-icon-wrap">
+        <span class="weather-icon" id="weather-icon"></span>
+        <span class="weather-desc" id="weather-desc"></span>
+      </div>
+
+      <!-- Clock & Date Display -->
+      <div class="clock-center">
+        <div class="clock-wrap">
+          <span class="clock-time" id="clock-time">00:00:00</span>
+          <span class="clock-ampm" id="clock-ampm"></span>
+        </div>
+        <div class="gregorian-date" id="gregorian-date">—</div>
+        <div class="hijri-date" id="hijri-date" dir="rtl">—</div>
+      </div>
+
+      <!-- Weather Temperature & Humidity -->
+      <div class="weather-temp-wrap" id="weather-temp-wrap">
+        <span class="weather-temp" id="weather-temp"></span>
+        <span class="weather-feels" id="weather-feels"></span>
+        <div class="weather-line"></div>
+        <span class="weather-humidity" id="weather-humidity"></span>
+      </div>
+    </div>
+  </header>
+
+  <!--
+    ==========================================================================
+    PAGE: PRAYER TIMES
+    Displays the list of daily prayers and the countdown to the next one.
+    ==========================================================================
+  -->
+  <div class="page" id="page-prayers">
+
+    <!-- Decorative Divider -->
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-ornament">&#9790;</div>
+      <div class="divider-line"></div>
+    </div>
+
+    <main class="prayers">
+      <!-- Fajr -->
+      <div class="prayer-row" id="prayer-fajr">
+        <span class="prayer-icon">&#9790;</span>
+        <div class="prayer-name-ar">الفجر</div>
+        <div class="prayer-time" id="time-fajr">--:--</div>
+      </div>
+
+      <!-- Sunrise -->
+      <div class="prayer-row" id="prayer-sunrise">
+        <span class="prayer-icon">&#9788;</span>
+        <div class="prayer-name-ar">الشروق</div>
+        <div class="prayer-time" id="time-sunrise">--:--</div>
+      </div>
+
+      <!-- Dhuhr -->
+      <div class="prayer-row" id="prayer-dhuhr">
+        <span class="prayer-icon">&#9728;</span>
+        <div class="prayer-name-ar">الظهر</div>
+        <div class="prayer-time" id="time-dhuhr">--:--</div>
+      </div>
+
+      <!-- Asr -->
+      <div class="prayer-row" id="prayer-asr">
+        <span class="prayer-icon">&#9729;</span>
+        <div class="prayer-name-ar">العصر</div>
+        <div class="prayer-time" id="time-asr">--:--</div>
+      </div>
+
+      <!-- Maghrib -->
+      <div class="prayer-row" id="prayer-maghrib">
+        <span class="prayer-icon">&#9774;</span>
+        <div class="prayer-name-ar">المغرب</div>
+        <div class="prayer-time" id="time-maghrib">--:--</div>
+      </div>
+
+      <!-- Isha -->
+      <div class="prayer-row" id="prayer-isha">
+        <span class="prayer-icon">&#10022;</span>
+        <div class="prayer-name-ar">العشاء</div>
+        <div class="prayer-time" id="time-isha">--:--</div>
+      </div>
+    </main>
+
+    <!-- Countdown Banner -->
+    <div class="next-banner" id="next-banner">
+      <div class="next-countdown" id="next-countdown">--:--:--</div>
+    </div>
+
+  </div>
+
+  <!--
+    ==========================================================================
+    PAGE: HOURLY WEATHER FORECAST
+    Displays a grid of upcoming weather conditions.
+    ==========================================================================
+  -->
+  <div class="page hidden" id="page-weather">
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-ornament">&#9728;</div>
+      <div class="divider-line"></div>
+    </div>
+
+    <!-- Forecast Grid (Populated by dashboard.js) -->
+    <div class="forecast-grid" id="forecast-grid"></div>
+  </div>
+
+  <!--
+    ==========================================================================
+    PAGE: WEATHER ALERTS
+    Displays active NWS alerts.
+    ==========================================================================
+  -->
+  <div class="page hidden" id="page-alerts">
+    <div class="alert-title">WEATHER ALERT</div>
+    <div class="alert-time-range" id="alert-time-range"></div>
+    <div class="alert-scroll-area" id="alert-scroll-area">
+      <div class="alert-instruction" id="alert-instruction"></div>
+    </div>
+  </div>
+
+  <!--
+    ==========================================================================
+    AUDIO PLAYERS
+    dashboard.js requires two separate elements:
+    - 'player-fajr' for Fajr (allows for distinct audio handling)
+    - 'player-others' for Dhuhr, Asr, Maghrib, and Isha
+    ==========================================================================
+  -->
+  <audio id="player-fajr" preload="auto"></audio>
+  <audio id="player-others" preload="auto"></audio>
+
+  <!--
+    ==========================================================================
+    SCRIPTS
+    ==========================================================================
+  -->
+  <script src="adhan.umd.js"></script>
+  <script src="hijri.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>

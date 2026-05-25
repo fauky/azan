@@ -1,0 +1,91 @@
+/*
+ * fonts.css — Typography Configuration
+ *
+ * Optimized for Azan Dashboard (Kiosk Mode).
+ * All fonts are loaded locally to ensure offline capability and performance.
+ *
+ * Directory: static/fonts/
+ */
+
+:root {
+  /* ── Font Stacks ────────────────────────────────────────────────────── */
+  /* Define the font families used throughout the application */
+  --font-arabic: 'Amiri', serif;
+  --font-latin:  'Cinzel', serif;
+  --font-mono:   'Share Tech Mono', monospace;
+}
+
+/* ==========================================================================
+   1. AMIRI
+   Target: Arabic text (Prayer names, Hijri dates)
+   ========================================================================== */
+
+@font-face {
+  font-family: 'Amiri';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('fonts/Amiri-Regular.ttf') format('truetype');
+  unicode-range:
+    U+0600-06FF,  /* Arabic */
+    U+0750-077F,  /* Arabic Supplement */
+    U+08A0-08FF,  /* Arabic Extended-A */
+    U+FB50-FDFF,  /* Arabic Presentation Forms-A */
+    U+FE70-FEFC,  /* Arabic Presentation Forms-B */
+    U+200C-200F;  /* Formatting characters (ZWNJ, ZWJ, RLM) */
+}
+
+@font-face {
+  font-family: 'Amiri';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('fonts/Amiri-Bold.ttf') format('truetype');
+  unicode-range:
+    U+0600-06FF,
+    U+0750-077F,
+    U+08A0-08FF,
+    U+FB50-FDFF,
+    U+FE70-FEFC,
+    U+200C-200F;
+}
+
+/* ==========================================================================
+   2. CINZEL
+   Target: Latin display text (Gregorian dates, Headers)
+   ========================================================================== */
+
+@font-face {
+  font-family: 'Cinzel';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Cinzel'),
+       url('fonts/Cinzel-Variable.ttf') format('truetype');
+  unicode-range: U+0000-00FF; /* Latin */
+}
+
+@font-face {
+  font-family: 'Cinzel';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Cinzel Bold'),
+       url('fonts/Cinzel-Variable.ttf') format('truetype');
+  unicode-range: U+0000-00FF; /* Latin */
+}
+
+/* ==========================================================================
+   3. SHARE TECH MONO
+   Target: Digital clock, countdowns, temperatures
+   ========================================================================== */
+
+@font-face {
+  font-family: 'Share Tech Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Share Tech Mono'),
+       url('fonts/ShareTechMono-Regular.ttf') format('truetype');
+  unicode-range: U+0000-00FF; /* Latin */
+}

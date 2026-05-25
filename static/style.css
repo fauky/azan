@@ -1,0 +1,608 @@
+/* =====================================================
+   AZAN DASHBOARD — KIOSK MODE (480x800)
+   ===================================================== */
+
+@import url('fonts.css');
+
+/* =====================================================
+   ROOT CONFIGURATION & VARIABLES
+   ===================================================== */
+
+:root {
+  /* ── Layout & Dimensions ── */
+  --layout-width: 480px;
+  --layout-padding: 12px;
+  --header-weather-width: 64px;
+
+  /* ── Colors: Backgrounds ── */
+  --bg-body: #0a1628;
+  --bg-card: #132040;
+  --bg-active: #1e3a6e;
+  --bg-past: #0e1a30;
+  --bg-tomorrow: #0d2535;
+  --bg-alert: #4a1010;
+  --bg-alert-scroll: #000000;
+
+  /* ── Colors: Text ── */
+  --text-primary: #ffffff;
+  --text-secondary: #ffe066;
+  --text-accent: #ffd700;
+  --text-muted: #8ab0d0;
+  --text-humidity: #a3ff47;
+  --text-weather: #ffffff;
+
+  /* ── Colors: Accents & Borders ── */
+  --color-gold: #ffd700;
+  --color-cyan: #00e5ff;
+  --color-red: #ff0000;
+  --color-border-card: rgba(255, 255, 255, 0.10);
+  --color-border-active: #ffd700;
+  --color-divider: rgba(255, 255, 255, 0.618);
+  --color-weather-line: rgba(255, 255, 255, 0.618);
+
+  /* ── Colors: Weather Icons ── */
+  --weather-clear: #ffe566;
+  --weather-few: #c8d8f0;
+  --weather-clouds: #a0b8cc;
+  --weather-overcast: #7a9aae;
+  --weather-rain: #6ab4f5;
+  --weather-drizzle: #80c4f8;
+  --weather-thunder: #e0a030;
+  --weather-snow: #ddeeff;
+  --weather-fog: #a0b0b8;
+
+  /* ── Colors: Glow & Shadows ── */
+  --glow-gold-bg: rgba(255, 215, 0, 0.15);
+  --glow-gold-shadow: rgba(255, 215, 0, 0.8);
+  --glow-red-bg: rgba(255, 0, 0, 0.25);
+  --glow-red-shadow: rgba(255, 0, 0, 0.8);
+
+  /* ── Fonts ── */
+  --font-arabic: 'Amiri', serif;
+  --font-latin: 'Cinzel', serif;
+  --font-mono: 'Share Tech Mono', monospace;
+  --font-symbol: 'Segoe UI Symbol', 'Apple Symbols', 'Arial Unicode MS', sans-serif;
+  --font-sans: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  /* ── Typography: Sizes ── */
+  --fs-clock-time: clamp(3rem, 9vw, 6rem);
+  --fs-clock-ampm: clamp(1rem, 3vw, 1.8rem);
+  --fs-date-greg: clamp(1.1rem, 3vw, 1.4rem);
+  --fs-date-hijri: clamp(1.5rem, 4vw, 2.5rem);
+
+  --fs-weather-icon: clamp(2.4rem, 6vw, 4rem);
+  --fs-weather-desc: clamp(1.1rem, 2.2vw, 1.4rem);
+  --fs-weather-temp: clamp(2.5rem, 5vw, 4.5rem);
+  --fs-weather-humid: clamp(2.2rem, 5.0vw, 4.0rem);
+
+  --fs-prayer-name: clamp(2.5rem, 7vw, 4.5rem);
+  --fs-prayer-time: clamp(2.8rem, 8vw, 5.2rem);
+  --fs-prayer-icon: clamp(2.3rem, 6vw, 3.5rem);
+
+  --fs-countdown: clamp(5rem, 10vw, 8.5rem);
+
+  --fs-fc-time: clamp(1.8rem, 5vw, 2.8rem);
+  --fs-fc-temp: clamp(1.8rem, 5vw, 3rem);
+  --fs-fc-icon: clamp(1.4rem, 4vw, 2.2rem);
+  --fs-fc-desc: clamp(0.9rem, 2.2vw, 1.4rem);
+  --fs-fc-pop: clamp(1rem, 2.5vw, 1.5rem);
+
+  --fs-alert-title: clamp(1.5rem, 4vw, 2.2rem);
+  --fs-alert-text: clamp(1.4rem, 3.5vw, 2.2rem);
+
+  /* ── Borders & Radius ── */
+  --radius-card: 16px;
+  --radius-banner: 18px;
+  --radius-forecast: 14px;
+  --radius-alert: 10px;
+
+  /* ── Animations & Transitions ── */
+  --anim-glow-cycle: 2s;
+  --anim-flash-cycle: 1s;
+  --trans-default: 0.3s;
+}
+
+/* =====================================================
+   RESET
+   ===================================================== */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Globally hide scrollbars to prevent 20px layout reservation in Kiosk mode */
+::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  height: 100vh;
+  width: 100vw;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  background: var(--bg-body);
+  direction: ltr;
+}
+
+body {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: var(--layout-width);
+  color: var(--text-primary);
+  font-family: var(--font-arabic);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* =====================================================
+   LAYOUT — header + pages fill 100vh
+   ===================================================== */
+
+.header {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  width: 100%;
+  padding: var(--layout-padding) var(--layout-padding) 0;
+  flex-shrink: 0;
+}
+
+/* Each page fills remaining height below the header */
+.page {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 0 var(--layout-padding) var(--layout-padding);
+}
+
+.page.hidden {
+  display: none;
+}
+
+/* =====================================================
+   HEADER
+   ===================================================== */
+
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 8px;
+  direction: ltr;
+  padding-bottom: 8px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.clock-center {
+  text-align: center;
+  flex: 1;
+}
+
+.clock-wrap {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 8px;
+  direction: ltr;
+  margin-bottom: 4px;
+}
+
+.clock-time {
+  font-family: var(--font-mono);
+  font-size: var(--fs-clock-time);
+  letter-spacing: 0.01em;
+}
+
+.clock-ampm {
+  font-family: var(--font-latin);
+  font-size: var(--fs-clock-ampm);
+  color: var(--color-gold);
+  margin-top: 6px;
+}
+
+.gregorian-date {
+  font-family: var(--font-symbol);
+  font-size: var(--fs-date-greg);
+  color: var(--text-date);
+  text-transform: uppercase;
+}
+
+/* dir="rtl" set on element; \u200F in JS ensures correct bidi */
+.hijri-date {
+  font-size: var(--fs-date-hijri);
+  color: var(--text-accent);
+  padding-top: 4px;
+}
+
+/* ── Weather icon (top-left) ── */
+.weather-icon-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: var(--header-weather-width);
+  flex-shrink: 0;
+  gap: 2px;
+}
+
+.weather-icon {
+  font-size: var(--fs-weather-icon);
+  line-height: 1;
+  color: var(--color-gold);
+  font-family: var(--font-symbol);
+}
+
+.weather-icon.wi-clear     { color: var(--weather-clear); }
+.weather-icon.wi-fewclouds { color: var(--weather-few); }
+.weather-icon.wi-clouds    { color: var(--weather-clouds); }
+.weather-icon.wi-overcast  { color: var(--weather-overcast); }
+.weather-icon.wi-rain      { color: var(--weather-rain); }
+.weather-icon.wi-drizzle   { color: var(--weather-drizzle); }
+.weather-icon.wi-thunder   { color: var(--weather-thunder); }
+.weather-icon.wi-snow      { color: var(--weather-snow); }
+.weather-icon.wi-fog       { color: var(--weather-fog); }
+
+.weather-desc {
+  font-family: var(--font-symbol);
+  font-size: var(--fs-weather-desc);
+  color: var(--text-weather);
+  text-align: center;
+}
+
+/* ── Temperature (top-right) ── */
+.weather-temp-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: right;
+  justify-content: right;
+  width: var(--header-weather-width);
+  flex-shrink: 0;
+  gap: 2px;
+}
+
+.weather-temp {
+  font-family: var(--font-mono);
+  font-size: var(--fs-weather-temp);
+  color: var(--text-secondary);
+  line-height: 1;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  align-self: right;
+}
+
+.weather-feels {
+  font-family: var(--font-symbol);
+  font-size: var(--fs-weather-desc);
+  color: var(--text-weather);
+  white-space: nowrap;
+  align-self: right;
+}
+
+.weather-line {
+  width: 100%;
+  height: 1px;
+  background-color: var(--color-weather-line);
+  margin: 2px 0;
+}
+
+.weather-humidity {
+  font-family: var(--font-mono);
+  font-size: var(--fs-weather-humid);
+  color: var(--text-humidity);
+  white-space: nowrap;
+  align-self: right;
+}
+
+/* =====================================================
+   DIVIDER
+   ===================================================== */
+
+.divider {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 12px;
+  margin: 6px 0;
+  flex-shrink: 0;
+}
+
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--color-gold), transparent);
+  opacity: 0.6;
+}
+
+.divider-ornament {
+  color: var(--color-gold);
+  font-size: 1.2rem;
+  font-family: var(--font-symbol);
+}
+
+/* =====================================================
+   PAGE A — PRAYERS
+   ===================================================== */
+
+.prayers {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.prayer-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  column-gap: 16px;
+  padding: 0 16px;
+  width: 100%;
+  max-width: 100%;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--color-border-card);
+  background: var(--bg-card);
+  direction: rtl;
+  flex: 1 1 0;
+  min-width: 0;
+  transition: background var(--trans-default), border-color var(--trans-default);
+}
+
+.prayer-icon {
+  font-size: var(--fs-prayer-icon);
+  font-family: var(--font-symbol);
+}
+
+.prayer-name-ar {
+  font-size: var(--fs-prayer-name);
+  line-height: 1.1;
+  text-align: right;
+  min-width: 0;
+}
+
+.prayer-time {
+  font-family: var(--font-mono);
+  font-size: var(--fs-prayer-time);
+  letter-spacing: 0.05em;
+  white-space: pre;
+  direction: ltr;
+  text-align: left;
+  min-width: 0;
+  color: var(--text-primary);
+}
+
+/* ── Active state ── */
+.prayer-row.active {
+  background: var(--bg-active);
+  border: 2px solid var(--color-border-active);
+}
+
+/* ── Past state ── */
+.prayer-row.past {
+  background: var(--bg-past);
+  opacity: 0.75;
+}
+
+/* ── Tomorrow Fajr state ── */
+.prayer-row.tomorrow {
+  border-color: var(--color-gold);
+  background: var(--bg-tomorrow);
+}
+.prayer-row.tomorrow .prayer-name-ar { color: var(--text-primary); }
+.prayer-row.tomorrow .prayer-time    { color: var(--text-primary); }
+.prayer-row.tomorrow .prayer-icon    { color: var(--text-primary); }
+
+/* --- Flashing effect for active prayer countdown --- */
+@keyframes flash {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.next-countdown.flashing {
+  animation: flash var(--anim-flash-cycle) step-end infinite;
+}
+
+/* =====================================================
+   NEXT PRAYER BANNER
+   ===================================================== */
+
+.next-banner {
+  width: 100%;
+  max-width: 100%;
+  align-self: center;
+  margin-top: 8px;
+  padding: 2px 30px;
+  border-radius: var(--radius-banner);
+  border: 1px solid var(--color-red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  direction: rtl;
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+.next-countdown {
+  font-family: var(--font-mono);
+  font-size: var(--fs-countdown);
+  color: var(--text-primary);
+  letter-spacing: 0.05em;
+  direction: ltr;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+/* =====================================================
+   PAGE B — HOURLY WEATHER FORECAST
+   ===================================================== */
+
+/* Scrollable grid of forecast cards */
+.forecast-grid {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-self: center;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  /* hide scrollbar on kiosk */
+  scrollbar-width: none;
+}
+.forecast-grid::-webkit-scrollbar { display: none; }
+
+/* Each forecast card: one row per 3-hour slot */
+.forecast-card {
+  display: grid;
+  grid-template-columns: 3.7em 3.7em 1.5em 1fr 6.5em;
+  align-items: center;
+  column-gap: 10px;
+  padding: 0 16px;
+  border-radius: var(--radius-forecast);
+  border: 1px solid var(--color-border-card);
+  background: var(--bg-card);
+  flex: 1 1 0;
+  min-height: 0;
+  direction: ltr;
+}
+
+.fc-time {
+  font-family: var(--font-mono);
+  font-size: var(--fs-fc-time);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  text-align: right;
+  padding-right: 4px;
+}
+
+.fc-ampm {
+  font-size: 0.6em;
+  margin-left: 0.2em;
+}
+
+.fc-temp {
+  font-family: var(--font-mono);
+  font-size: var(--fs-fc-temp);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  text-align: center;
+}
+
+.fc-icon {
+  font-size: var(--fs-fc-icon);
+  text-align: center;
+  line-height: 1;
+  font-family: var(--font-symbol);
+  color: var(--color-gold);
+}
+
+/* re-use same colour classes as header icon */
+.fc-icon.wi-clear     { color: var(--weather-clear); }
+.fc-icon.wi-fewclouds { color: var(--weather-few); }
+.fc-icon.wi-clouds    { color: var(--weather-clouds); }
+.fc-icon.wi-overcast  { color: var(--weather-overcast); }
+.fc-icon.wi-rain      { color: var(--weather-rain); }
+.fc-icon.wi-drizzle   { color: var(--weather-drizzle); }
+.fc-icon.wi-thunder   { color: var(--weather-thunder); }
+.fc-icon.wi-snow      { color: var(--weather-snow); }
+.fc-icon.wi-fog       { color: var(--weather-fog); }
+
+.fc-desc {
+  font-family: var(--font-sans);
+  font-size: var(--fs-fc-desc);
+  color: var(--text-weather);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fc-pop {
+  font-family: var(--font-mono);
+  font-size: var(--fs-fc-pop);
+  color: var(--text-weather);
+  white-space: nowrap;
+  text-align: right;
+  font-family: var(--font-symbol);
+}
+
+/* =====================================================
+   PAGE C — WEATHER ALERTS
+   ===================================================== */
+
+#page-alerts {
+  background-color: var(--bg-alert);
+  justify-content: center;
+  text-align: center;
+  margin: 0;
+  padding-top: 20px;
+  width: 100%;
+}
+
+.alert-title {
+  font-family: var(--font-sans);
+  font-size: var(--fs-alert-title);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 5px;
+  letter-spacing: 0.05em;
+}
+
+.alert-time-range {
+  font-family: var(--font-sans);
+  font-size: var(--fs-alert-text);
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+
+.alert-headline {
+  font-family: var(--font-sans);
+  font-size: var(--fs-alert-text);
+  color: var(--text-primary);
+  margin-bottom: 15px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.alert-scroll-area {
+  flex: 1;
+  overflow: hidden;
+  width: 100%;
+  background: var(--bg-alert-scroll);
+  border-radius: var(--radius-alert);
+  padding: 10px;
+  position: relative;
+}
+
+.alert-instruction {
+  font-family: var(--font-sans);
+  font-size: var(--fs-alert-text);
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  text-align: left;
+  position: relative;
+}
+
+.alert-instruction.is-scrolling {
+  animation: scroll-text var(--scroll-duration) linear infinite;
+}
+
+@keyframes scroll-text {
+  0%   { transform: translateY(0); }
+  10%  { transform: translateY(0); }
+  90%  { transform: translateY(var(--scroll-amount)); }
+  100% { transform: translateY(var(--scroll-amount)); }
+}
